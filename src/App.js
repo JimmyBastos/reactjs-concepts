@@ -4,11 +4,7 @@ import api from "./services/api";
 import "./styles.css";
 
 function App() {
-  let defaultFormData = {
-    title: "",
-    url: "",
-    techs: ""
-  }
+  let defaultFormData = { title: "", url: "", techs: "" }
 
   let [repositoryList, setRepositoryList] = useState([]);
   let [formData, setFormData] = useState({ ...defaultFormData });
@@ -28,12 +24,7 @@ function App() {
   async function handleAddRepository(event) {
     event.preventDefault()
     event.stopPropagation()
-
-    let payload = {
-      ...formData,
-      techs: formData.techs.split(","),
-    }
-
+    let payload = { ...formData, techs: formData.techs.split(",") }
     let { data: repository } = await api.post(`repositories`, payload)
     setRepositoryList([...repositoryList, repository])
     setFormData({ ...defaultFormData })
@@ -72,7 +63,7 @@ function App() {
           onChange={handleInputChange("techs")}
         />
 
-        <button className="btn" >Adicionar</button>
+        <button className="btn">Adicionar</button>
       </form>
 
       <ul className="repository-list" data-testid="repository-list">
