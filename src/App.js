@@ -4,12 +4,14 @@ import api from "./services/api";
 import "./styles.css";
 
 function App() {
-  let [repositoryList, setRepositoryList] = useState([]);
-  let [formData, setFormData] = useState({
+  let defaultFormData = {
     title: "",
     url: "",
     techs: ""
-  });
+  }
+
+  let [repositoryList, setRepositoryList] = useState([]);
+  let [formData, setFormData] = useState({ ...defaultFormData });
 
   useEffect(() => {
     api.get("repositories").then(({ data }) => {
@@ -34,6 +36,7 @@ function App() {
 
     let { data: repository } = await api.post(`repositories`, payload)
     setRepositoryList([...repositoryList, repository])
+    setFormData({ ...defaultFormData })
   }
 
   async function handleRemoveRepository(id) {
@@ -69,17 +72,28 @@ function App() {
           onChange={handleInputChange("techs")}
         />
 
-        <button>Adicionar</button>
+        <button className="btn" >Adicionar</button>
       </form>
 
       <ul className="repository-list" data-testid="repository-list">
         {repositoryList.map(repository => (
           <li className="repository" key={repository.id}>
-            {repository.title}
+            <h3 >
+              {repository.title}
+              <small style={{ display: "block", color: "gray" }}>
+                {repository.techs.join(", ")}
+              </small>
+            </h3>
 
-            <button onClick={() => handleRemoveRepository(repository.id)}>
-              Remover
-            </button>
+            <div>
+              <button className="btn btn--small btn--danger" onClick={() => handleRemoveRepository(repository.id)}>
+                Remover
+              </button>
+
+              <a href={repository.url} target="_blank" className="btn btn--small" >
+                Acessar
+              </a>
+            </div>
           </li>
         ))}
       </ul>
